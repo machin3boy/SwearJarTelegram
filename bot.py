@@ -1,12 +1,12 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-updater = Updater(token="5673240432:AAEQFzBJWqOyihuzll8K1OGqLemKW7kf9y8", use_context=True)
+updater = Updater(token="BOT_API_TOKEN", use_context=True)
 
 scoreboard = {} 
 
 def shame_blasphemers(update, context):
     #substring condition
     message = update.message
-    curse_list = ["fk", "fuck", "shit", "shat", "bitch", "mf", "kos omak", "asshole", "cock", "dick", "pussy", "clit", "cunt", "dyke", "kike", "nigga", "piss", "slut", "whore", "twat", "wank", "prick", "nigger", "arsehole", "chink"]
+    curse_list = ["curse word", "curse word 2, etc."]
     curse_score = sum([message.text.lower().count(curse.lower()) if curse.lower() in message.text.lower() else 0 for curse in curse_list])
 
     if curse_score>0:
@@ -19,9 +19,10 @@ def shame_blasphemers(update, context):
         else:
             scoreboard[user_name]=curse_score
 
-        sorted_scoreboard = sorted(scoreboard, key=scoreboard.get, reverse=True)
-        results = "\n".join([(user_name+": "+str(sorted_scoreboard[user_name])) for user_name in sorted_scoreboard])
-        message.reply_text("Blasphemy Tally:\n"+results)
+        sorted_scoreboard = sorted(scoreboard.items(), key=scoreboard.get, reverse=True)
+
+        results = "\n".join([score[0]+ ": " + str(score[1]) for score in sorted_scoreboard])
+        message.reply_text("Blasphemy Tally (find god):\n\n"+results)
 
 
 # Get the dispatcher to register handlers.
