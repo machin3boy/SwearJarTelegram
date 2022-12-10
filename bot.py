@@ -1,13 +1,13 @@
-#pip install python-telegram-bot
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-updater = Updater(token="BOT_TOKEN", use_context=True)
+updater = Updater(token="BOT_TOKEN_ID", use_context=True)
 
 scoreboard = {} 
 
-def handle_message(bot, update):
+def shame_blasphemers(update, context):
     #substring condition
+    message = update.message
     curse_list = ["curse1", "curse2"]
-    curse_score = sum([1 if curse.lower() in message.text.lower() else 0 for curse in curse_list)]
+    curse_score = sum([message.text.lower().count(curse.lower()) if curse.lower() in message.text.lower() else 0 for curse in curse_list])
 
     if curse_score>0:
         #identify who blashpemed and punish appropriately
@@ -20,14 +20,16 @@ def handle_message(bot, update):
             scoreboard[user_name]=curse_score
 
         sorted_scoreboard = sorted(scoreboard, key=scoreboard.get, reverse=True)
-        results = "\n".join([user_name+": "+scoreboard[user_name] for user_name in scoreboard])
-        group.send_message("Someone has blasphemed...\n\nNew scoreboard:\n"+results)
+        results = "\n".join([(user_name+": "+str(scoreboard[user_name])) for user_name in scoreboard])
+        message.reply_text("Blasphemy Tally:\n"+results)
+
 
 # Get the dispatcher to register handlers.
-dp = updater.dispatcher
+dispatcher = updater.dispatcher
 
 # Add a command handler all group messages.
-updater.dispatcher.add_handler(MessageHandler(Filters.group, handle_message))
+blasphemy_handler = MessageHandler(Filters.text, shame_blasphemers)
+dispatcher.add_handler(blasphemy_handler)
 
 # Start the Bot.
 updater.start_polling()
