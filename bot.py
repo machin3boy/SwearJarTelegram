@@ -19,7 +19,7 @@ def shame_blasphemers(update, context):
         else:
             scoreboard[user_name]=curse_score
 
-        sorted_scoreboard = sorted(scoreboard.items(), key=scoreboard.get, reverse=True)
+        sorted_scoreboard = sorted(scoreboard.items(), key=lambda x: x[1], reverse=True)
 
         results = "\n".join([score[0]+ ": " + str(score[1]) for score in sorted_scoreboard])
         message.reply_text("Blasphemy Tally (find god):\n\n"+results)
